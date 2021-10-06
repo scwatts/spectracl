@@ -15,15 +15,13 @@ def entry():
     # Get command line arguments
     args = arguments.get_args()
 
-    # Load model and species map
+    # Load model and selected features
     model_fp = pathlib.Path(__file__).parent / 'data/model.bin'
-    species_map_fp = pathlib.Path(__file__).parent / 'data/species_map.tsv'
+    features_fp = pathlib.Path(__file__).parent / 'data/features_selected.txt'
     with model_fp.open('rb') as fh:
         model = pickle.load(fh)
-    with species_map_fp.open('r') as fh:
-        line_token_gen = (line.rstrip().split('\t') for line in fh)
-        species_map = {int(n): s for s, n in line_token_gen}
-
+    with features_fp.open('r') as fh:
+        features = [int(line.rstrip()) for line in fh]
     # Discover fid files
     fid_fps = list(args.spectra_dir.rglob('fid'))
     if len(fid_fps) == 0:
@@ -31,7 +29,7 @@ def entry():
         sys.exit(1)
 
     # Process spectra
-    mass_bins = np.arange(1950, 21000, 10)
+    mass_bins = np.arange(1950, 21000, 1)
     sp_data = pd.DataFrame(np.zeros((len(fid_fps), mass_bins.size-1)), columns=mass_bins[:-1])
     spectra_uids = list()
     for i, fid_fp in enumerate(fid_fps):
@@ -43,12 +41,13 @@ def entry():
         spectra_uid, sp_data.iloc[i] = spectra.process(fid_fp, acqu_fp, mass_bins)
         spectra_uids.append(spectra_uid)
 
-    # Classify spectra
+    # Select specific features then classify
+    sp_data = sp_data[features]
     pred_probs = model.predict_proba(sp_data)
     for spectra_uid, probs in zip(spectra_uids, pred_probs):
         species_index = np.argmax(probs)
         species_prob = round(probs[species_index] * 100, 2)
-        species = species_map[species_index]
+        species = model.classes_[species_index]
         print(spectra_uid, species, species_prob, sep='\t')
 
 

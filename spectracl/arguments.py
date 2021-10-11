@@ -1,6 +1,7 @@
 import argparse
 import pathlib
 import shutil
+import os
 
 
 from . import __version__
@@ -19,6 +20,13 @@ def get_args():
     parser = argparse.ArgumentParser(formatter_class=WideHelpFormatter, add_help=False)
     parser.add_argument('--spectra_dir', required=True, type=pathlib.Path,
         help='Spectra directory')
+    parser.add_argument(
+        '--data_dir',
+        required=False,
+        type=pathlib.Path,
+        default=os.path.join(pathlib.Path(__file__).parent, 'data'),
+        help='Directory containing model.bin, and any other needed configuration file',
+    )
     parser.add_argument('-v', '--version', action='version', version=f'{__program_name__} {__version__}',
         help='Show version number and exit')
     parser.add_argument('-h', '--help', action='help',

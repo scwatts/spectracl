@@ -1,7 +1,6 @@
 import pathlib
 import pickle
 import sys
-import os
 
 
 import pandas as pd
@@ -17,11 +16,9 @@ def entry():
     args = arguments.get_args()
 
     # Load model and selected features
-    model_fp = pathlib.Path(os.path.join(args.data_dir, 'model.bin'))
-    features_fp = pathlib.Path(os.path.join(args.data_dir, 'features_selected.txt'))
-    with model_fp.open('rb') as fh:
+    with args.model_fp.open('rb') as fh:
         model = pickle.load(fh)
-    with features_fp.open('r') as fh:
+    with args.features_fp.open('r') as fh:
         features = [int(line.rstrip()) for line in fh]
     # Discover fid files
     fid_fps = list(args.spectra_dir.rglob('fid'))

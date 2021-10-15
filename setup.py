@@ -5,6 +5,7 @@ import sys
 
 import spectracl
 
+requirements = open("requirements.txt").read().split()
 
 setuptools.setup(
     name='spectracl',
@@ -14,6 +15,7 @@ setuptools.setup(
     license='GPLv3',
     test_suite='tests',
     packages=setuptools.find_packages(),
+    install_requires=requirements,
     package_data={'spectracl': ['data/species_map.tsv', 'data/model.bin']},
     entry_points={
         'console_scripts': ['spectracl=spectracl.__main__:entry'],

@@ -16,7 +16,7 @@ setuptools.setup(
     test_suite='tests',
     packages=setuptools.find_packages(),
     install_requires=requirements,
-    package_data={'spectracl': ['data/species_map.tsv', 'data/model.bin']},
+    package_data={'spectracl': ['data/features_selected.txt', 'data/model.bin']},
     entry_points={
         'console_scripts': ['spectracl=spectracl.__main__:entry'],
     }

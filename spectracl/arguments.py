@@ -29,6 +29,12 @@ def get_args():
         help='Spectra directory'
     )
     parser.add_argument(
+        '--sample_sheet_fp',
+        required=False,
+        type=pathlib.Path,
+        help='Sample sheet containing information to group and average spectrum'
+    )
+    parser.add_argument(
         '--model_fp',
         required=False,
         type=pathlib.Path,
@@ -58,6 +64,8 @@ def get_args():
     args = parser.parse_args()
     if not args.spectra_dir.exists():
         parser.error(f'Spectra directory {args.spectra_dir} does not exist')
+    if args.sample_sheet_fp and not args.sample_sheet_fp.exists():
+        parser.error(f'Sample sheet file {args.sample_sheet} does not exist')
     if not args.model_fp.exists():
         if args.model_fp == PKG_MODEL_FP:
             msg_p1 = f'Missing the model file provided with package ({args.model_fp}).'

@@ -38,7 +38,7 @@ def compute(
 ) -> List:
     # Discover fid files
     fid_fps = list(data_dir.rglob('fid'))
-    assert len(fid_fps), f'error: did not find any fid files in {args.spectra_dir}'
+    assert len(fid_fps), f'error: did not find any fid files in {data_dir}'
 
     # Read in spectrum data and sort according to sample sheet, if provided
     spectra_grouped = dict()

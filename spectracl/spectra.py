@@ -85,7 +85,8 @@ def read_acqu_data(acqu_fp):
                 vtype = acqu_fields[var]['vtype']
                 assert name not in acqu_data
                 acqu_data[name] = vtype(val)
-    assert all(d['name'] in acqu_data for d in acqu_fields.values())
+    for d in acqu_fields.values():
+        assert d['name'] in acqu_data, f"Missing {d['name']} in {acqu_fp}" 
     # Apply further processing to spectra_uid and byte_order
     acqu_data['spectra_uid'] = acqu_data['spectra_uid'].strip('<>')
     acqu_data['byte_order'] = 'little' if acqu_data['byte_order'] == 0 else 'big'

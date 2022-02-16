@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import spectracl.__main__
+import spectracl.main
 
 
 if __name__ == '__main__':
-    spectracl.__main__.entry()
+    spectracl.main.entry()

@@ -6,7 +6,6 @@ from typing import List
 import pandas as pd
 import numpy as np
 
-
 from . import arguments
 from . import spectra
 
@@ -31,15 +30,16 @@ def entry():
         print(f'error: did not find any fid files in {args.spectra_dir}', file=sys.stderr)
         sys.exit(1)
 
-    compute(features, fid_fps, model, sample_data)
+    for result in compute(features, fid_fps, model, sample_data):
+        print(*result, sep='\t')
 
 
 def compute(
         features: List[int],
-        fid_fps:  List[pathlib.Path],
+        fid_fps: List[pathlib.Path],
         model,
         sample_data: dict,
-    ):
+) -> List:
     # Read in spectrum data and sort according to sample sheet, if provided
     spectra_grouped = dict()
     sp_identifiers = ['uid', 'sample_name', 'full_name', 'semi_unique_name']
@@ -75,7 +75,7 @@ def compute(
         species_index = np.argmax(probs)
         species_prob = round(probs[species_index] * 100, 2)
         species = model.classes_[species_index]
-        print(sample_name, species, species_prob, sep='\t')
+        yield sample_name, species, species_prob
 
 
 def read_sample_sheet(fp):

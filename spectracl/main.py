@@ -1,7 +1,7 @@
 import pathlib
 import pickle
 import sys
-
+from typing import List
 
 import pandas as pd
 import numpy as np
@@ -31,6 +31,15 @@ def entry():
         print(f'error: did not find any fid files in {args.spectra_dir}', file=sys.stderr)
         sys.exit(1)
 
+    compute(features, fid_fps, model, sample_data)
+
+
+def compute(
+        features: List[int],
+        fid_fps:  List[pathlib.Path],
+        model,
+        sample_data: dict,
+    ):
     # Read in spectrum data and sort according to sample sheet, if provided
     spectra_grouped = dict()
     sp_identifiers = ['uid', 'sample_name', 'full_name', 'semi_unique_name']

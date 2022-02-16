@@ -80,7 +80,3 @@ def read_sample_sheet(fp):
             entry = {k: v for k, v in zip(header_tokens, line_tokens)}
             data[entry['spectrum_id']] = entry['sample_id']
     return data
-
-
-if __name__ == '__main__':
-    entry()

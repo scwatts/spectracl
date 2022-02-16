@@ -24,22 +24,22 @@ def entry():
         model = pickle.load(fh)
     with args.features_fp.open('r') as fh:
         features = [int(line.rstrip()) for line in fh]
-    # Discover fid files
-    fid_fps = list(args.spectra_dir.rglob('fid'))
-    if len(fid_fps) == 0:
-        print(f'error: did not find any fid files in {args.spectra_dir}', file=sys.stderr)
-        sys.exit(1)
 
-    for result in compute(features, fid_fps, model, sample_data):
+    for result in compute(features=features, data_dir=args.spectra_dir, model=model, sample_data=sample_data):
         print(*result, sep='\t')
 
 
 def compute(
-        features: List[int],
-        fid_fps: List[pathlib.Path],
-        model,
+        *,
+        data_dir: pathlib.Path,
         sample_data: dict,
+        model,
+        features: List[int],
 ) -> List:
+    # Discover fid files
+    fid_fps = list(data_dir.rglob('fid'))
+    assert len(fid_fps), f'error: did not find any fid files in {args.spectra_dir}'
+
     # Read in spectrum data and sort according to sample sheet, if provided
     spectra_grouped = dict()
     sp_identifiers = ['uid', 'sample_name', 'full_name', 'semi_unique_name']
